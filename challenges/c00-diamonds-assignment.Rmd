@@ -1,7 +1,7 @@
 ---
 title: "Getting Started: Diamonds"
-author: "(Your name here)"
-date: 2020-
+author: "Satchel Sevenau"
+date: 2023-1-25
 output:
   github_document:
     toc: true
@@ -55,22 +55,40 @@ In this first stage, you will explore the `diamonds` dataset and document your o
 ```{r q1-task}
 ## TASK: Plot `price` vs `carat` below
 ## Your code here!
+diamonds %>% 
+  ggplot() +
+    geom_point(aes(x = carat, y = price))
 ```
 
 **Observations**:
 
 - (Write your observations here!)
+- a general upward trend can be observed
+- as carat quality increases, the overall price also increases
+- there are outliers to this statement
+- we can observe that there are cases where diamonds with lower carat are worth a higher price
 
 ### __q2__ Create a visualization showing variables `carat`, `price`, and `cut` simultaneously. Experiment with which variable you assign to which aesthetic (`x`, `y`, etc.) to find an effective visual.
 
 ```{r q2-task}
 ## TASK: Plot `price`, `carat`, and `cut` below
 ## Your code here!
+diamonds %>% 
+  ggplot() +
+    geom_point(aes(x = carat, y = price, color = cut))
+
 ```
 
 **Observations**:
 
 - (Write your observations here!)
+- a general upward trend can be observed
+- as carat quality increases, the overall price also increases
+- there are outliers to this statement
+- we can observe that there are cases where diamonds with lower carat are worth a higher price
+- we now are given more insight into why this is true
+- adding color shows that the quality of the cut also effects the price the diamonds are sold at
+- there is a general trend where lower quality cuts are worth less than the higher quality cut counter parts
 
 
 # Communication

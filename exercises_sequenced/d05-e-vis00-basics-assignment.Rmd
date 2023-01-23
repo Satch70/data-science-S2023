@@ -30,6 +30,8 @@ knitr::opts_chunk$set(echo = TRUE)
 *Hint*: We learned how to inspect a dataset in `e-data-00-basics`!
 
 ```{r q1-task, eval=FALSE}
+head(diamonds)
+?diamonds
 ```
 
 ### __q2__ Use your "standard checks" to determine what variables the dataset has.
@@ -46,12 +48,15 @@ y` pairs. Language is hard!
 
 ```{r q3-task}
 ## TODO: Complete this code
-ggplot(diamonds)
+ggplot(diamonds) + 
+  geom_point(mapping = aes(x = carat, y = price))
 ```
 
 **Observations**:
 
 - (Write your observations here!)
+General trend of higher carat = higher price
+many diamonds of same carat are sold for varying prices
 
 ## A note on *aesthetics*
 
@@ -69,12 +74,14 @@ simultaneously.
 
 ```{r q4-task}
 ## TODO: Complete this code
-ggplot(diamonds)
+ggplot(diamonds) + 
+  geom_point(mapping = aes(x = carat, y = price, color = cut))
 ```
 
 **Observations**:
 
 - (Write your observations here!)
+This shows how most of the cuts can dictate how diamonds with the same carat can have varying prices. Generally Ideal cuts get a higher price.
 
 <!-- include-exit-ticket -->
 # Exit Ticket

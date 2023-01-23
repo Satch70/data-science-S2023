@@ -26,12 +26,20 @@ knitr::opts_chunk$set(echo = TRUE)
 In [RStudio](https://bookdown.org/yihui/rmarkdown/r-code.html) use the shortcut
 `Ctrl + Alt + I` (`Cmd + Option + I` on Mac). Type the command
 `library(tidyverse`).
+```{r}
+library(tidyverse)
+```
 
 
 Make sure to load packages at the *beginning* of your notebooks! This is a
 best-practice.
 
 ### __q2__ Run the chunk with `library(tidyverse)`. What packages are loaded?
+
+
+✔ tibble  3.1.8      ✔ dplyr   1.0.10
+✔ tidyr   1.2.1      ✔ stringr 1.5.0 
+✔ readr   2.1.3      ✔ forcats 0.5.2 ── Conflicts ──────────────────────────── tidyverse_conflicts() ──
 
 In
 [RStudio](https://support.rstudio.com/hc/en-us/articles/200711853-Keyboard-Shortcuts)
@@ -41,6 +49,13 @@ cursor.
 
 ### __q3__ What are the main differences between `install.packages()` and `library()`? How often do you need to call each one?
 
+install.packages() is used to install new packages in R, while library() is used to load packages that have already been installed.
+
+You would use install.packages() when you want to add a new package to your R environment that you haven't used before. This needs to be done only once for each package, unless you want to update the package to a new version.
+
+On the other hand, you would use library() every time you start a new R session or script and want to use functions from a specific package. This is because the library() function makes the package's functions and data available for use in your current R session or script.
+
+In Rstudio, you can install package via command install.packages("packagename") and load package via library("packagename").
 
 <!-- include-exit-ticket -->
 # Exit Ticket
