@@ -83,7 +83,7 @@ cases
 
 ```{r q1-test}
 ## TODO: Modify with your answer
-q1_answer <- 0
+q1_answer <- 2
 
 ## NOTE: The following will test your answer
 if (((q1_answer + 56) %% 3 == 1) & (q1_answer > 0)) {
@@ -121,7 +121,7 @@ alloys
 
 ```{r q2-test}
 ## TODO: Modify with your answer
-q2_answer <- 0
+q2_answer <- 3
 
 ## NOTE: The following will test your answer
 if (((q2_answer + 38) %% 3 == 2) & (q2_answer > 0)) {
@@ -367,6 +367,11 @@ order.
 df_q3_res <-
   df_q3 %>%
 ## NOTE: Add your pivot here!
+  pivot_wider(
+    names_from = id,
+    values_from = value,
+    names_prefix = "X-"
+  )
 
 df_q3_res
 all_equal(df_base, df_q3_res) # Checks equality; returns TRUE if equal
@@ -395,6 +400,12 @@ filtering). Check the documentation for `pivot_longer`.
 df_q4_res <-
   df_q4 %>%
 ## NOTE: Add your pivot here!
+  pivot_longer(
+    names_to = "key",
+    values_to = "X-0",
+    values_drop_na = TRUE,
+    cols = c(A, B, C)
+  )
 
 df_q4_res
 all_equal(df_base, df_q4_res) # Checks equality; returns TRUE if equal
@@ -423,6 +434,16 @@ order.
 df_q5_res <-
   df_q5 %>%
 ## NOTE: Add your pivot here!
+  pivot_longer(
+    names_to = c(".value", "key"),
+    names_sep = "_",
+    cols = everything()
+  )
+
+  #pivot_longer(
+   # names_to = c(".value", "set"),
+    #names_sep = "-",
+    #cols = everything()
 
 df_q5_res
 all_equal(df_base, df_q5_res) # Checks equality; returns TRUE if equal
