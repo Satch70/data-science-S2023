@@ -35,7 +35,7 @@ define how you will be graded, both on an individual and team basis.
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|-------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+|--------------|----------------------------|-------------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -378,14 +378,20 @@ df_q2 %>%
 
 **Observations**:
 
+-   Definifiton of outliers: the data points that lie outside of
+    Michelson's range of error
 -   For the middle graph of Velocity (in Vacuum) vs. Distinctness, I can
-    see that for the simulated velocity, the outliers aren't as far away
-    as the outliers in the real velocity. The spread is also more
-    concentrated within the margin of error that Michelson estimated.
+    see that for the simulated velocity, the outliers range of error,
+    aren't as far away as the outliers in the real velocity. The spread
+    is also more concentrated within the margin of error that Michelson
+    estimated.
 -   For the last graph Velocity (in Vacuum) vs. Temperature, there is
     also a correlation where the outliers in the real velocity, lay
     farther away from the margin of error than the outliers in the
     simulated velocity.
+-   There is no trend to explain the differences between Michelson's
+    estimate for light's speed in a vacuum and light's actual speed in a
+    vacuum.
 
 ## Bibliography
 
