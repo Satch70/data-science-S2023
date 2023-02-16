@@ -266,6 +266,12 @@ summary(df_stang)
     ##  3rd Qu.: 0.3290   3rd Qu.:10500   3rd Qu.:0.3230                     
     ##  Max.   : 0.3310   Max.   :10700   Max.   :0.3300
 
+``` r
+unique(df_stang_long$thick)
+```
+
+    ## [1] 0.022 0.032 0.064 0.081
+
 **Observations**:
 
 - Is there “one true value” for the material properties of Aluminum?
@@ -273,8 +279,8 @@ summary(df_stang)
     are many factors that can change such as the alloy compound, the
     heat level when tempering the metal, etc.
 - How many aluminum alloys are in this dataset? How do you know?
-  - There is only one alloy present in this set which we can see is
-    defined as al_24st in the data set.
+  - There is only one alloy present in this set which we can see when
+    calling the unique function on the alloy column of the data set.
 - What angles were tested?
   - 0, 45, 90.
 - What thicknesses were tested?
@@ -292,7 +298,7 @@ summary(df_stang)
 ## TASK: Investigate your question from q1 here
 df_stang_long %>% 
   ggplot() +
-  geom_point(aes(x=E, y=angle, color = thick))
+  geom_point(aes(y=E, x=thick, color = angle))
 ```
 
 ![](c03-stang-assignment_files/figure-gfm/q3-task-1.png)<!-- -->

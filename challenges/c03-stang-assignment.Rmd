@@ -26,7 +26,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|-------------------|-----------------------------|-------------------------|
+|-------------------|----------------------------|-------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -118,6 +118,7 @@ print("Very good!")
 ```{r q2-task}
 df_stang %>% glimpse
 summary(df_stang)
+unique(df_stang_long$thick)
 ```
 
 **Observations**:
@@ -125,7 +126,7 @@ summary(df_stang)
 -   Is there "one true value" for the material properties of Aluminum?
     -   No there is not one true value for the properties of aluminum. There are many factors that can change such as the alloy compound, the heat level when tempering the metal, etc.
 -   How many aluminum alloys are in this dataset? How do you know?
-    -   There is only one alloy present in this set which we can see is defined as al_24st in the data set.
+    -   There is only one alloy present in this set which we can see when calling the unique function on the alloy column of the data set.
 -   What angles were tested?
     -   0, 45, 90.
 -   What thicknesses were tested?
@@ -142,7 +143,7 @@ summary(df_stang)
 ## TASK: Investigate your question from q1 here
 df_stang_long %>% 
   ggplot() +
-  geom_point(aes(x=E, y=angle, color = thick))
+  geom_point(aes(y=E, x=thick, color = angle))
 ```
 
 **Observations**:
