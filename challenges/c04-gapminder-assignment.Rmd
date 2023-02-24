@@ -1,6 +1,6 @@
 ---
 title: "Gapminder"
-author: "(Your name here)"
+author: "Satchel"
 date: 2020-
 output:
   github_document:
@@ -12,24 +12,28 @@ prerequisites:
 *Purpose*: Learning to do EDA well takes practice! In this challenge you'll further practice EDA by first completing a guided exploration, then by conducting your own investigation. This challenge will also give you a chance to use the wide variety of visual tools we've been learning.
 
 <!-- include-rubric -->
+
 # Grading Rubric
+
 <!-- -------------------------------------------------- -->
 
 Unlike exercises, **challenges will be graded**. The following rubrics define how you will be graded, both on an individual and team basis.
 
 ## Individual
+
 <!-- ------------------------- -->
 
-| Category | Needs Improvement | Satisfactory |
-|----------|----------------|--------------|
-| Effort | Some task __q__'s left unattempted | All task __q__'s attempted |
-| Observed | Did not document observations, or observations incorrect | Documented correct observations based on analysis |
-| Supported | Some observations not clearly supported by analysis | All observations clearly supported by analysis (table, graph, etc.) |
-| Assessed | Observations include claims not supported by the data, or reflect a level of certainty not warranted by the data | Observations are appropriately qualified by the quality & relevance of the data and (in)conclusiveness of the support |
-| Specified | Uses the phrase "more data are necessary" without clarification | Any statement that "more data are necessary" specifies which *specific* data are needed to answer what *specific* question |
-| Code Styled | Violations of the [style guide](https://style.tidyverse.org/) hinder readability | Code sufficiently close to the [style guide](https://style.tidyverse.org/) |
+| Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
+|-------------------|-----------------------------|-------------------------|
+| Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
+| Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
+| Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
+| Assessed    | Observations include claims not supported by the data, or reflect a level of certainty not warranted by the data | Observations are appropriately qualified by the quality & relevance of the data and (in)conclusiveness of the support      |
+| Specified   | Uses the phrase "more data are necessary" without clarification                                                  | Any statement that "more data are necessary" specifies which *specific* data are needed to answer what *specific* question |
+| Code Styled | Violations of the [style guide](https://style.tidyverse.org/) hinder readability                                 | Code sufficiently close to the [style guide](https://style.tidyverse.org/)                                                 |
 
 ## Due Date
+
 <!-- ------------------------- -->
 
 All the deliverables stated in the rubrics above are due **at midnight** before the day of the class discussion of the challenge. See the [Syllabus](https://docs.google.com/document/d/1qeP6DUS8Djq_A0HMllMqsSqX3a9dbcx1/edit?usp=sharing&ouid=110386251748498665069&rtpof=true&sd=true) for more information.
@@ -40,36 +44,43 @@ library(gapminder)
 
 ```
 
-*Background*: [Gapminder](https://www.gapminder.org/about-gapminder/) is an
-independent organization that seeks to educate people about the state of the
-world. They seek to counteract the worldview constructed by a hype-driven media
-cycle, and promote a "fact-based worldview" by focusing on data. The dataset
-we'll study in this challenge is from Gapminder.
+*Background*: [Gapminder](https://www.gapminder.org/about-gapminder/) is an independent organization that seeks to educate people about the state of the world. They seek to counteract the worldview constructed by a hype-driven media cycle, and promote a "fact-based worldview" by focusing on data. The dataset we'll study in this challenge is from Gapminder.
 
 # Guided EDA
+
 <!-- -------------------------------------------------- -->
 
 First, we'll go through a round of *guided EDA*. Try to pay attention to the high-level process we're going through---after this guided round you'll be responsible for doing another cycle of EDA on your own!
 
-### __q0__ Perform your "first checks" on the dataset. What variables are in this
+### **q0** Perform your "first checks" on the dataset. What variables are in this
+
 dataset?
 
 ```{r q0-task}
 ## TASK: Do your "first checks" here!
+glimpse(gapminder)
+gapminder
+?gapminder
 ```
 
 **Observations**:
 
-- Write all variable names here
+-   Write all variable names here
+-   country
+-   continent
+-   year
+-   lifeExp
+-   pop
+-   gdpPercap
 
-### __q1__ Determine the most and least recent years in the `gapminder` dataset.
+### **q1** Determine the most and least recent years in the `gapminder` dataset.
 
 *Hint*: Use the `pull()` function to get a vector out of a tibble. (Rather than the `$` notation of base R.)
 
 ```{r q1-task}
 ## TASK: Find the largest and smallest values of `year` in `gapminder`
-year_max <- NA_real_
-year_min <- NA_real_
+year_max <- max(gapminder[, 3])
+year_min <- min(gapminder[, 3])
 ```
 
 Use the following test to check your work.
@@ -89,32 +100,95 @@ if (is_tibble(year_max)) {
 print("Nice!")
 ```
 
-### __q2__ Filter on years matching `year_min`, and make a plot of the GDP per capita against continent. Choose an appropriate `geom_` to visualize the data. What observations can you make?
+### **q2** Filter on years matching `year_min`, and make a plot of the GDP per capita against continent. Choose an appropriate `geom_` to visualize the data. What observations can you make?
 
 You may encounter difficulties in visualizing these data; if so document your challenges and attempt to produce the most informative visual you can.
 
 ```{r q2-task}
 ## TASK: Create a visual of gdpPercap vs continent
+
+q2.0 <- gapminder %>% 
+  filter(year == year_min) %>% 
+  ggplot(aes(x = continent, y = gdpPercap)) +
+  geom_col()
+q2.0
+
+q2.1 <- gapminder %>% 
+  filter(year == year_min) %>% 
+  ggplot(aes(x = continent, y = gdpPercap)) +
+  geom_point() +
+  scale_y_log10()
+q2.1
+
+q2.2 <- gapminder %>% 
+  filter(year == year_min) %>% 
+  ggplot(aes(continent, gdpPercap)) +
+  scale_y_log10() +
+  geom_boxplot()
+q2.2
+
+year_min
 ```
 
 **Observations**:
 
-- Write your observations here
+-   Write your observations here
+
+-   Plot 0
+
+    -   In 1952, the Asian continent had the largest GDP per capita.
+
+    -   The continent with the next largest GDP per capita was Europe, followed by the Americas, Africa and then Oceania.
+
+    -   There seems to be one country that takes up a large portion of the Asian continent.
+
+    -   There seems to be a few other countries that take up significant amount of gdp within their continent.
+
+-   Plot 1
+
+    -   the Oceania continents countries were very concentrated.
+
+    -   One country in the Asian continent was much higher than the rest.
+
+    -   One country in europe and two in the americas also stuck out above the rest of the countries in their respective continents.
+
+-   Plot 2
+
+    -   When I used the boxplot I was able to see again one country in Asia much higher then the rest.
+
+    -   The two countries in the americas were still visibly positioned above the rest of the countries in their continent
+
+    -   The country in europe that was positioned above the rest of the countries in Plot 1 was not visible anymore.
 
 **Difficulties & Approaches**:
 
-- Write your challenges and your approach to solving them
+-   Write your challenges and your approach to solving them
+-   filtering out the year - looked up how to filter it
+-   how to properly represent data - drew out some visuals first then tried to work towards those visuals
+-   Writing it all out at once - I coded it step by step and checked that I got something I expected at each spot
+-   Showing the different countries in the data - decided to use methods where the individual countries didn't matter as much
+-   Showing outliers - used boxplots to show the medians of the countries which allowed the outliers to stick out more.
 
-### __q3__ You should have found *at least* three outliers in q2 (but possibly many more!). Identify those outliers (figure out which countries they are).
+### **q3** You should have found *at least* three outliers in q2 (but possibly many more!). Identify those outliers (figure out which countries they are).
 
 ```{r q3-task}
 ## TASK: Identify the outliers from q2
+top_3 <- gapminder %>% 
+  filter(year == year_min) %>% 
+  arrange(desc(gdpPercap)) %>% 
+  head(10)
+
+top_3
 ```
 
 **Observations**:
 
-- Identify the outlier countries from q2
-  - (Your response here)
+-   Identify the outlier countries from q2
+    -   Kuwait was the largest outlier with a gdp per capita of 108382.353
+    -   The next outlier was Switzerland, which had a significantly smaller gdp per capita then Kuwait
+    -   Switzerland was closely followed by the United States
+    -   The next country was Canada, which wasn't as close as to the US, as the US was with Switzerland
+    -   The rest of the countries were relatively close to one another in their gdp per capita
 
 *Hint*: For the next task, it's helpful to know a ggplot trick we'll learn in an upcoming exercise: You can use the `data` argument inside any `geom_*` to modify the data that will be plotted *by that geom only*. For instance, you can use this trick to filter a set of points to label:
 
@@ -132,39 +206,126 @@ gapminder %>%
   )
 ```
 
-### __q4__ Create a plot similar to yours from q2 studying both `year_min` and `year_max`. Find a way to highlight the outliers from q3 on your plot *in a way that lets you identify which country is which*. Compare the patterns between `year_min` and `year_max`.
+### **q4** Create a plot similar to yours from q2 studying both `year_min` and `year_max`. Find a way to highlight the outliers from q3 on your plot *in a way that lets you identify which country is which*. Compare the patterns between `year_min` and `year_max`.
 
 *Hint*: We've learned a lot of different ways to show multiple variables; think about using different aesthetics or facets.
 
 ```{r q4-task}
 ## TASK: Create a visual of gdpPercap vs continent
+q4 <- gapminder %>% 
+  filter(year == year_min | year == year_max) %>% 
+  ggplot(aes(continent, gdpPercap)) +
+  scale_y_log10() +
+  geom_boxplot() +  geom_point(
+    data = . %>% filter(country %in% c("Kuwait", "Switzerland", "United States")),
+    mapping = aes(color = country),
+    size = 2
+  ) +
+  facet_wrap(~ year)
+q4
 ```
 
 **Observations**:
 
-- Write your observations here
+-   Kuwait's gdp per capita went down significantly
+-   United States and Switzerlands gdp per capita went up
+-   It appears Kuwait still has the largest gdp per capita
 
 # Your Own EDA
+
 <!-- -------------------------------------------------- -->
 
 Now it's your turn! We just went through guided EDA considering the GDP per capita at two time points. You can continue looking at outliers, consider different years, repeat the exercise with `lifeExp`, consider the relationship between variables, or something else entirely.
 
-### __q5__ Create *at least* three new figures below. With each figure, try to pose new questions about the data.
+### **q5** Create *at least* three new figures below. With each figure, try to pose new questions about the data.
 
 ```{r q5-task1}
 ## TASK: Your first graph
+top_5_pop <- gapminder %>% 
+  filter(year == year_max) %>% 
+  arrange(desc(pop)) %>% 
+  head(5)
+top_5_pop
+
+
+q5.1 <- gapminder %>% 
+  filter(year == year_max) %>% 
+  ggplot(aes(x = continent, y = pop)) +
+  geom_point() +
+  geom_point(
+    data = . %>% filter(country %in% c("China", "India", "United States", "Indonesia", "Brazil")),
+    mapping = aes(color = country),
+    size = 2
+  ) +
+  scale_y_log10()
+q5.1
+
+
+q5.2 <- gapminder %>% 
+  filter(year == year_max) %>% 
+  ggplot(aes(x = continent, y = pop)) +
+  geom_boxplot() +
+  geom_point(
+    data = . %>% filter(country %in% c("China", "India", "United States", "Indonesia", "Brazil")),
+    mapping = aes(color = country),
+    size = 2
+  ) +
+  scale_y_log10()
+q5.2
 ```
 
-- (Your notes and observations here)
+-   Observations
+    -   India and China clearly had the largest populations
+
+    -   Countries in the asian continent have the highest average population
+
+    -   The African American European and Oceanian countries have similar average populations
+-   Questions
+    -   Does number of countries in continent effect population
+
+    -   Is gdp tied to population
+
+    -   does continent with largest country median population correlate with continent with country with largest population
+
+    -   What year is this plot for
 
 ```{r q5-task2}
 ## TASK: Your second graph
+q6.1 <- gapminder %>% 
+  filter(year == year_max) %>% 
+  ggplot(aes(lifeExp, gdpPercap)) +
+  geom_point(mapping = aes(color = continent))
+q6.1
 ```
 
-- (Your notes and observations here)
+-   Observations
+    -   A larger gdp per capita relates to a longer life expectancy
+
+    -   Many of the countries from the same continent are loosely grouped together
+-   Questions
+    -   Why do some countries with longer life expectancy have lower gdp per capitas
+
+    -   which continents the least amount of correlation between its countries - which continent has the most spread between its countries
 
 ```{r q5-task3}
 ## TASK: Your third graph
+
+q7.1 <- gapminder  %>% 
+  filter(year == year_max | year == year_min) %>% 
+  ggplot(aes(lifeExp, pop)) +
+  geom_point(mapping = aes(color = continent)) +
+  facet_wrap(~ year)
+q7.1
 ```
 
-- (Your notes and observations here)
+-   (Your notes and observations here)
+-   Observations
+    -   The low end of the life expectancy went from 30 years to 40 years
+
+    -   The upper end of the life expectancy went from approximately 70 years to 80 years
+
+    -   It doesn't seem there is a strong enough correlation between population level and life expectancy between continents.
+-   Questions
+    -   Does population get affected by life expectancy
+
+    -   What effects do different birth rates have to allow for countries with lower life expectancy to have similar populations with countries that have a high life expectancy
