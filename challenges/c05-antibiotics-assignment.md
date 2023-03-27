@@ -185,34 +185,38 @@ positive or negative.
 # WRITE YOUR CODE HERE
 df_antibiotics_longer <-pivot_longer(df_antibiotics, cols = c(penicillin, streptomycin, neomycin), 
                                      names_to = "antibiotic", 
-                                     values_to = "effectiveness")
+                                     values_to = "MIC")
 df_antibiotics_longer
 ```
 
     ## # A tibble: 48 × 4
-    ##    bacteria              gram     antibiotic   effectiveness
-    ##    <chr>                 <chr>    <chr>                <dbl>
-    ##  1 Aerobacter aerogenes  negative penicillin         870    
-    ##  2 Aerobacter aerogenes  negative streptomycin         1    
-    ##  3 Aerobacter aerogenes  negative neomycin             1.6  
-    ##  4 Brucella abortus      negative penicillin           1    
-    ##  5 Brucella abortus      negative streptomycin         2    
-    ##  6 Brucella abortus      negative neomycin             0.02 
-    ##  7 Bacillus anthracis    positive penicillin           0.001
-    ##  8 Bacillus anthracis    positive streptomycin         0.01 
-    ##  9 Bacillus anthracis    positive neomycin             0.007
-    ## 10 Diplococcus pneumonia positive penicillin           0.005
+    ##    bacteria              gram     antibiotic       MIC
+    ##    <chr>                 <chr>    <chr>          <dbl>
+    ##  1 Aerobacter aerogenes  negative penicillin   870    
+    ##  2 Aerobacter aerogenes  negative streptomycin   1    
+    ##  3 Aerobacter aerogenes  negative neomycin       1.6  
+    ##  4 Brucella abortus      negative penicillin     1    
+    ##  5 Brucella abortus      negative streptomycin   2    
+    ##  6 Brucella abortus      negative neomycin       0.02 
+    ##  7 Bacillus anthracis    positive penicillin     0.001
+    ##  8 Bacillus anthracis    positive streptomycin   0.01 
+    ##  9 Bacillus anthracis    positive neomycin       0.007
+    ## 10 Diplococcus pneumonia positive penicillin     0.005
     ## # … with 38 more rows
 
 ``` r
+color_scale <- scale_color_gradient(low = "blue", high = "red")
+
+shape_scale <- scale_shape_manual(values = c(22, 21))
+
 df_antibiotics_longer %>% 
-  ggplot(aes(x = bacteria, y = effectiveness, shape = antibiotic, color = gram)) +
+  ggplot(aes(x = antibiotic, y = bacteria, color = MIC, shape = gram)) +
   geom_point(size = 3) +
-  scale_shape_manual(values = c(17, 18, 15)) +
-  scale_color_manual(values = c("red", "blue"), labels = c("Gram-positive", "Gram-negative")) +
-  labs(x = "Bacteria", y = "MIC Score", shape = "Antibiotic", color = "Gram Status") +
-  theme_classic() +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  xlab("Bacteria") +
+  ylab("Antibiotic") +
+  ggtitle("Minimum Inhibitory Concentration (MIC)") +
+  color_scale +
+  shape_scale
 ```
 
 ![](c05-antibiotics-assignment_files/figure-gfm/q1.1-1.png)<!-- -->
@@ -229,13 +233,14 @@ your other visuals.
 ``` r
 # WRITE YOUR CODE HERE
 df_antibiotics_longer %>% 
-ggplot( aes(x = bacteria, y = effectiveness, fill = antibiotic)) +
+ggplot( aes(x = bacteria, y = MIC, fill = antibiotic)) +
   geom_bar(stat = "identity", position = position_dodge()) +
-  facet_wrap(~gram, scales = "free_y") +
-  labs(title = "Antibiotic effectiveness by bacteria and gram stain",
+  facet_wrap(~gram, scales = "free") +
+  labs(title = "MIC by bacteria and gram stain",
        x = "Bacteria", y = "MIC Score",
        fill = "Antibiotic") +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  scale_y_log10()
 ```
 
 ![](c05-antibiotics-assignment_files/figure-gfm/q1.2-1.png)<!-- -->
@@ -252,12 +257,13 @@ your other visuals.
 ``` r
 # WRITE YOUR CODE HERE
 df_antibiotics_longer %>% 
-ggplot( aes(x = antibiotic, y = effectiveness)) + 
-  geom_boxplot(fill = "#69b3a2") +
+ggplot( aes(x = antibiotic, y = MIC, color = antibiotic)) + 
+  geom_point() +
   facet_wrap(~bacteria, scales = "free_y") +
   labs(title = "Effectiveness of Antibiotics for Different Bacteria",
        x = "Antibiotic",
-       y = "Effectiveness")
+       y = "MIC") + 
+  scale_y_log10()
 ```
 
 ![](c05-antibiotics-assignment_files/figure-gfm/q1.3-1.png)<!-- -->
@@ -275,10 +281,10 @@ your other visuals.
 # WRITE YOUR CODE HERE
 
 df_antibiotics_longer %>% 
-  filter(effectiveness < 3 ) %>% 
+  filter(MIC < 3 ) %>% 
   ggplot(aes(x = antibiotic, y = bacteria)) +
-  geom_point(aes(size = effectiveness)) +
-  geom_point(data = filter(df_antibiotics_longer, effectiveness <= 0.1),
+  geom_point(aes(size = MIC)) +
+  geom_point(data = filter(df_antibiotics_longer, MIC <= 0.1),
              aes(color = "MIC score <= 0.1"), size = 3) +
   labs(x = "Antibiotic", y = "Bacteria") +
   theme_classic() +
@@ -302,9 +308,9 @@ your other visuals.
 # WRITE YOUR CODE HERE
 
 df_antibiotics_longer %>% 
-  filter(effectiveness < 30 ) %>% 
+  filter(MIC < 30 ) %>% 
   ggplot() + 
-  geom_point(mapping = aes(x = bacteria, y = effectiveness, color = antibiotic), size = 2) +
+  geom_point(mapping = aes(x = bacteria, y = MIC, color = antibiotic), size = 2) +
   coord_flip() + 
   facet_grid(~ gram)
 ```
@@ -358,6 +364,12 @@ negative grams stain.
 
 #### Guiding Question 2
 
+You could instead talk about how MIC values reflect something about the
+biological structure of a bacteria. Given that relationship between MIC
+and biological structure, you can make an argument about how similar MIC
+values across bacteria might relate to similar biological structure (a
+more sound reasoning for renaming a bacterium). 
+
 In 1974 *Diplococcus pneumoniae* was renamed *Streptococcus pneumoniae*,
 and in 1984 *Streptococcus fecalis* was renamed *Enterococcus fecalis*
 \[2\].
@@ -367,10 +379,15 @@ and in 1984 *Streptococcus fecalis* was renamed *Enterococcus fecalis*
 
 *Observations*
 
-\- What is your response to the question above? - because it has similar
-responses to penicillin as the streptococcus bacteria. As well as the
-fact that a negative grams affects it as well, which is also similar to
-the streptococcus family. Therefor they grouped it with them.
+\- What is your response to the question above? - because *Diplococcus
+pneumoniae* has similar responses to penicillin as bacteria in the
+streptococcus family it may have a similar biological structure. We also
+know that there is also a relationship between MIC values, and the
+biological structures of bacteria because the structure can effect how
+well an antibiotic is at treating the bacteria. Therefor I am making the
+assumption that due to their similar MIC values and reactions to similar
+antibiotics, they made the assumption that the bacterial structure may
+place it in the pneumonia family.
 
 \- Which of your visuals above (1 through 5) is **most effective** at
 helping to answer this question? - 5
