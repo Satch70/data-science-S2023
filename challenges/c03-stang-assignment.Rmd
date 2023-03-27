@@ -118,7 +118,7 @@ print("Very good!")
 ```{r q2-task}
 df_stang %>% glimpse
 summary(df_stang)
-unique(df_stang_long$thick)
+unique(df_stang_long$alloy)
 ```
 
 **Observations**:

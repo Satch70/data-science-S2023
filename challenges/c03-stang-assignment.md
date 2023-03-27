@@ -267,10 +267,10 @@ summary(df_stang)
     ##  Max.   : 0.3310   Max.   :10700   Max.   :0.3300
 
 ``` r
-unique(df_stang_long$thick)
+unique(df_stang_long$alloy)
 ```
 
-    ## [1] 0.022 0.032 0.064 0.081
+    ## [1] "al_24st"
 
 **Observations**:
 
