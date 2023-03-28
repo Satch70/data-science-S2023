@@ -194,8 +194,12 @@ To check your results, this is Table `B01003`.
 
 ``` r
 ## TASK: Load the census bureau data with the following tibble name.
-df_pop <- read_csv("data/ACSDT5Y2018.B01003_2023-03-08T184259/ACSDT5Y2018.B01003-Data.csv", col_types = cols(), skip=1) %>% 
-  select(-starts_with("Annotation of Estimate"),-starts_with("Annotation of Margin of Error!!Total")) %>%
+covid_file <- "data/ACSDT5Y2018.B01003_2023-03-08T184259/ACSDT5Y2018.B01003-Data.csv"
+
+df_pop <- read_csv( covid_file, col_types = cols(), skip=1) %>% 
+  select(
+    -starts_with("Annotation of Estimate"),
+    -starts_with("Annotation of Margin of Error!!Total")) %>%
   rename(id = Geography)
 ```
 
@@ -325,7 +329,8 @@ the NYT data `df_covid` already contains the `fips`.
 ``` r
 ## TASK: Create a `fips` column by extracting the county code
 df_q3 <- df_pop %>%
-  mutate(fips = substr(id, start = nchar(id) - 4, stop = nchar(id)))
+  # mutate(fips = substr(id, start = nchar(id) - 4, stop = nchar(id)))
+  mutate(fips = str_sub(id, -5))
 ```
 
 Use the following test to check your answer.
@@ -457,35 +462,33 @@ Before turning you loose, let’s complete a couple guided EDA tasks.
 
 ``` r
 ## TASK: Compute mean and sd for cases_per100k and deaths_per100k
-mean_cases_per100k <- mean(df_normalized$cases_per100k)
-sd_cases_per100k <- sd(df_normalized$cases_per100k)
+summary_cases_per100k <- df_normalized %>% 
+  group_by(date) %>% 
+  drop_na(cases_per100k, deaths_per100k) %>% 
+  summarise(
+    mean_cases_per100k = mean(cases_per100k),
+    sd_cases_per100k = sd(cases_per100k),
+    mean_deaths_per100k = mean(deaths_per100k),
+    sd_deaths_per100k = sd(deaths_per100k),
+  )
 
-mean_deaths_per100k <- mean(df_normalized$deaths_per100k)
-sd_deaths_per100k <- sd(df_normalized$deaths_per100k)
-
-
-mean_cases_per100k
+summary_cases_per100k
 ```
 
-    ## [1] 9974.675
-
-``` r
-sd_cases_per100k
-```
-
-    ## [1] 8448.659
-
-``` r
-mean_deaths_per100k
-```
-
-    ## [1] NA
-
-``` r
-sd_deaths_per100k
-```
-
-    ## [1] NA
+    ## # A tibble: 844 × 5
+    ##    date       mean_cases_per100k sd_cases_per100k mean_deaths_per100k sd_death…¹
+    ##    <date>                  <dbl>            <dbl>               <dbl>      <dbl>
+    ##  1 2020-01-21             0.127           NA                        0         NA
+    ##  2 2020-01-22             0.127           NA                        0         NA
+    ##  3 2020-01-23             0.127           NA                        0         NA
+    ##  4 2020-01-24             0.0731           0.0764                   0          0
+    ##  5 2020-01-25             0.0593           0.0591                   0          0
+    ##  6 2020-01-26             0.0423           0.0481                   0          0
+    ##  7 2020-01-27             0.0423           0.0481                   0          0
+    ##  8 2020-01-28             0.0423           0.0481                   0          0
+    ##  9 2020-01-29             0.0423           0.0481                   0          0
+    ## 10 2020-01-30             0.0461           0.0465                   0          0
+    ## # … with 834 more rows, and abbreviated variable name ¹​sd_deaths_per100k
 
 ### **q7** Find the top 10 counties in terms of `cases_per100k`, and the top 10 in terms of `deaths_per100k`. Report the population of each county along with the per-100,000 counts. Compare the counts against the mean values you found in q6. Note any observations.
 
@@ -493,78 +496,64 @@ sd_deaths_per100k
 ## TASK: Find the top 10 max cases_per100k counties; report populations as well
 
 top_counties_cases <- df_normalized %>%
-  arrange(desc(cases_per100k)) %>%
-  top_n(10)
-```
+  group_by(county) %>% 
+  summarize(max_cases_per100k = max(cases_per100k),
+            population = max(population),
+            ) %>% 
+  arrange(desc(max_cases_per100k)) %>%
+  slice(1:10)
 
-    ## Selecting by deaths_per100k
-
-``` r
 top_counties_cases
 ```
 
-    ## # A tibble: 84 × 9
-    ##    date       county   state fips  cases deaths population cases_per100k death…¹
-    ##    <date>     <chr>    <chr> <chr> <dbl>  <dbl>      <dbl>         <dbl>   <dbl>
-    ##  1 2022-04-26 McMullen Texas 48311   169      9        662        25529.   1360.
-    ##  2 2022-04-27 McMullen Texas 48311   169      9        662        25529.   1360.
-    ##  3 2022-04-28 McMullen Texas 48311   169      9        662        25529.   1360.
-    ##  4 2022-04-29 McMullen Texas 48311   169      9        662        25529.   1360.
-    ##  5 2022-04-30 McMullen Texas 48311   169      9        662        25529.   1360.
-    ##  6 2022-05-01 McMullen Texas 48311   169      9        662        25529.   1360.
-    ##  7 2022-05-02 McMullen Texas 48311   169      9        662        25529.   1360.
-    ##  8 2022-05-03 McMullen Texas 48311   169      9        662        25529.   1360.
-    ##  9 2022-05-04 McMullen Texas 48311   169      9        662        25529.   1360.
-    ## 10 2022-05-05 McMullen Texas 48311   169      9        662        25529.   1360.
-    ## # … with 74 more rows, and abbreviated variable name ¹​deaths_per100k
+    ## # A tibble: 10 × 3
+    ##    county                   max_cases_per100k population
+    ##    <chr>                                <dbl>      <dbl>
+    ##  1 Loving                             192157.        102
+    ##  2 Chattahoochee                       69527.      10767
+    ##  3 Nome Census Area                    62922.       9925
+    ##  4 Northwest Arctic Borough            62542.       7734
+    ##  5 Crowley                             59449.       5630
+    ##  6 Bethel Census Area                  57439.      18040
+    ##  7 Dewey                               54317.       5779
+    ##  8 Dimmit                              54019.      10663
+    ##  9 Jim Hogg                            50133.       5282
+    ## 10 Kusilvak Census Area                49817.       8198
 
 ``` r
 ## TASK: Find the top 10 deaths_per100k counties; report populations as well
 top_counties_deaths <- df_normalized %>%
-  arrange(desc(deaths_per100k)) %>%
-  top_n(10)
-```
+  group_by(county) %>% 
+  summarize(max_deaths_per100k = max(deaths_per100k),
+            population = max(population),
+            ) %>% 
+  arrange(desc(max_deaths_per100k)) %>%
+  slice(1:10)
+  
 
-    ## Selecting by deaths_per100k
-
-``` r
 top_counties_deaths
 ```
 
-    ## # A tibble: 84 × 9
-    ##    date       county   state fips  cases deaths population cases_per100k death…¹
-    ##    <date>     <chr>    <chr> <chr> <dbl>  <dbl>      <dbl>         <dbl>   <dbl>
-    ##  1 2022-02-19 McMullen Texas 48311   166      9        662        25076.   1360.
-    ##  2 2022-02-20 McMullen Texas 48311   166      9        662        25076.   1360.
-    ##  3 2022-02-21 McMullen Texas 48311   166      9        662        25076.   1360.
-    ##  4 2022-02-22 McMullen Texas 48311   166      9        662        25076.   1360.
-    ##  5 2022-02-23 McMullen Texas 48311   166      9        662        25076.   1360.
-    ##  6 2022-02-24 McMullen Texas 48311   167      9        662        25227.   1360.
-    ##  7 2022-02-25 McMullen Texas 48311   167      9        662        25227.   1360.
-    ##  8 2022-02-26 McMullen Texas 48311   167      9        662        25227.   1360.
-    ##  9 2022-02-27 McMullen Texas 48311   167      9        662        25227.   1360.
-    ## 10 2022-02-28 McMullen Texas 48311   167      9        662        25227.   1360.
-    ## # … with 74 more rows, and abbreviated variable name ¹​deaths_per100k
-
-``` r
-counties <- union(select(top_counties_cases, county),
-                  select(top_counties_deaths, county))
-
-print(counties)
-```
-
-    ## # A tibble: 1 × 1
-    ##   county  
-    ##   <chr>   
-    ## 1 McMullen
+    ## # A tibble: 10 × 3
+    ##    county            max_deaths_per100k population
+    ##    <chr>                          <dbl>      <dbl>
+    ##  1 McMullen                       1360.        662
+    ##  2 Galax city                     1175.       6638
+    ##  3 Motley                         1125.       1156
+    ##  4 Hancock                        1054.      75690
+    ##  5 Emporia city                   1022.       5381
+    ##  6 Towns                          1016.      11417
+    ##  7 Jerauld                         986.       2029
+    ##  8 Loving                          980.        102
+    ##  9 Robertson                       980.      69344
+    ## 10 Martinsville city               946.      13101
 
 **Observations**:
 
-- All of the are in McMullen county in Texas
-- A lot of them tie so I think that is why there are more then ten rows
-- The number of cases don’t vary that much
-- The top ten for the number of deaths in the county occur about 2
-  months before the top ten for the number of cases in the county.
+- The max deaths per 100k was McMullen county.
+- The max cases per 100k was Loving county.
+- The max deaths and cases seem to be much higher then the mean values
+  of deaths and cases.
 
 ## Self-directed EDA
 
@@ -617,8 +606,6 @@ df_normalized %>%
 
 **DO YOUR OWN ANALYSIS HERE**
 
-### Aside: Some visualization tricks
-
 The graph above depicts the rate of change of the average case rate and
 the change of the average death rate for the state of New York. The
 dashed lines are added visuals I use to show the type of analysis I was
@@ -627,7 +614,10 @@ trying to perform and are just a reference.
 Observations:
 
 - both the case rate and death rate experience relatively similar change
-  at reatively similar dates.
+  at relatively similar dates.
+
+- This seems to show that the death trend follows the case trend by a
+  few weeks.
 
 - I read that generally death rates follow case rates by two weeks in
   the given reading of understanding Covid numbers.
@@ -652,6 +642,8 @@ Observations:
 
 - Therefor from my observations I would say I can not conclude that
   there are any trends in the data without further exploration.
+
+### Aside: Some visualization tricks
 
 <!-- ------------------------- -->
 

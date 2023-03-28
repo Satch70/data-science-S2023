@@ -24,7 +24,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|-------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
+|--------------|----------------------------|-------------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -88,8 +88,12 @@ That's the high-level view; now let's dig into the details.
 
 ```{r q1-task}
 ## TASK: Load the census bureau data with the following tibble name.
-df_pop <- read_csv("data/ACSDT5Y2018.B01003_2023-03-08T184259/ACSDT5Y2018.B01003-Data.csv", col_types = cols(), skip=1) %>% 
-  select(-starts_with("Annotation of Estimate"),-starts_with("Annotation of Margin of Error!!Total")) %>%
+covid_file <- "data/ACSDT5Y2018.B01003_2023-03-08T184259/ACSDT5Y2018.B01003-Data.csv"
+
+df_pop <- read_csv( covid_file, col_types = cols(), skip=1) %>% 
+  select(
+    -starts_with("Annotation of Estimate"),
+    -starts_with("Annotation of Margin of Error!!Total")) %>%
   rename(id = Geography)
 
 df_pop
@@ -152,7 +156,8 @@ To join these datasets, we'll need to use [FIPS county codes](https://en.wikiped
 ```{r q3-task}
 ## TASK: Create a `fips` column by extracting the county code
 df_q3 <- df_pop %>%
-  mutate(fips = substr(id, start = nchar(id) - 4, stop = nchar(id)))
+  # mutate(fips = substr(id, start = nchar(id) - 4, stop = nchar(id)))
+  mutate(fips = str_sub(id, -5))
 ```
 
 Use the following test to check your answer.
@@ -258,18 +263,17 @@ Before turning you loose, let's complete a couple guided EDA tasks.
 
 ```{r q6-task}
 ## TASK: Compute mean and sd for cases_per100k and deaths_per100k
-mean_cases_per100k <- mean(df_normalized$cases_per100k)
-sd_cases_per100k <- sd(df_normalized$cases_per100k)
+summary_cases_per100k <- df_normalized %>% 
+  group_by(date) %>% 
+  drop_na(cases_per100k, deaths_per100k) %>% 
+  summarise(
+    mean_cases_per100k = mean(cases_per100k),
+    sd_cases_per100k = sd(cases_per100k),
+    mean_deaths_per100k = mean(deaths_per100k),
+    sd_deaths_per100k = sd(deaths_per100k),
+  )
 
-mean_deaths_per100k <- mean(df_normalized$deaths_per100k)
-sd_deaths_per100k <- sd(df_normalized$deaths_per100k)
-
-
-mean_cases_per100k
-sd_cases_per100k
-
-mean_deaths_per100k
-sd_deaths_per100k
+summary_cases_per100k
 
 ```
 
@@ -279,30 +283,34 @@ sd_deaths_per100k
 ## TASK: Find the top 10 max cases_per100k counties; report populations as well
 
 top_counties_cases <- df_normalized %>%
-  arrange(desc(cases_per100k)) %>%
-  top_n(10)
+  group_by(county) %>% 
+  summarize(max_cases_per100k = max(cases_per100k),
+            population = max(population),
+            ) %>% 
+  arrange(desc(max_cases_per100k)) %>%
+  slice(1:10)
 
 top_counties_cases
 
 ## TASK: Find the top 10 deaths_per100k counties; report populations as well
 top_counties_deaths <- df_normalized %>%
-  arrange(desc(deaths_per100k)) %>%
-  top_n(10)
+  group_by(county) %>% 
+  summarize(max_deaths_per100k = max(deaths_per100k),
+            population = max(population),
+            ) %>% 
+  arrange(desc(max_deaths_per100k)) %>%
+  slice(1:10)
+  
 
 top_counties_deaths
 
-counties <- union(select(top_counties_cases, county),
-                  select(top_counties_deaths, county))
-
-print(counties)
 ```
 
 **Observations**:
 
--   All of the are in McMullen county in Texas
--   A lot of them tie so I think that is why there are more then ten rows
--   The number of cases don't vary that much
--   The top ten for the number of deaths in the county occur about 2 months before the top ten for the number of cases in the county.
+-   The max deaths per 100k was McMullen county.
+-   The max cases per 100k was Loving county.
+-   The max deaths and cases seem to be much higher then the mean values of deaths and cases.
 
 ## Self-directed EDA
 
@@ -347,13 +355,13 @@ df_normalized %>%
 
 **DO YOUR OWN ANALYSIS HERE**
 
-### Aside: Some visualization tricks
-
 The graph above depicts the rate of change of the average case rate and the change of the average death rate for the state of New York. The dashed lines are added visuals I use to show the type of analysis I was trying to perform and are just a reference.
 
 Observations:
 
--   both the case rate and death rate experience relatively similar change at reatively similar dates.
+-   both the case rate and death rate experience relatively similar change at relatively similar dates.
+
+-   This seems to show that the death trend follows the case trend by a few weeks.
 
 -   I read that generally death rates follow case rates by two weeks in the given reading of understanding Covid numbers.
 
@@ -370,6 +378,8 @@ Observations:
 -   While there seem to be trends that support this claim, it is too general of slopes and the trends are to close to definitely say that this graph shows this relationship.
 
 -   Therefor from my observations I would say I can not conclude that there are any trends in the data without further exploration.
+
+### Aside: Some visualization tricks
 
 <!-- ------------------------- -->
 
