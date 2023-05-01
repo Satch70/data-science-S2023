@@ -204,7 +204,7 @@ df_samples %>%
   - It looks like it is approximately 40000 PSI.
 - To what extent can you tell what shape the distribution of the data
   has?
-  - The shape looks close to normal.
+  - I can not tell the shape of the distribution.
 - Assuming the scopus is the strength of an individual part made from
   this aluminum alloy, is the observed variability real or induced?
   - It says these are the “true” breaking strength for each sample, due
@@ -291,17 +291,10 @@ POF
   - It does
 - Is this estimate of the probability of failure trustworthy? Why or why
   not?
-  - Following the model we were given and provided that the information
-    was correct the probability of failure is trustworthy. The reason
-    being we tested for 10000 possible simulations across the all
-    different strengths, meaning that alloys with the weakest strengths
-    passed the test.
+  - It is not trustworthy because we only have 25 samples.
 - Can you confidently conclude that `POF < 0.03`? Why or why not.
-  - The accuracy of the estimated POF depends on the sample size, the
-    number of Monte Carlo simulations, and the representatives of the
-    samples. Therefore, with the large number of simulations and the
-    relative accurateness of the alloys strengths, I would say that I
-    can conclude that the POF \< 0.03.
+  - Yes the POF is \< 0.03 because the sd is 0 therefore all the values
+    are zero.
 
 <!-- --------------------------------------- -->
 
@@ -418,27 +411,26 @@ df_norm_pof
     test for more scenarios we can develop more accurate estimates of
     what pieces may or may not fail.
 
-- ## Does the confidence interval above account for uncertainty arising from the *Monte Carlo approximation*? Why or why not?
+- Does the confidence interval above account for uncertainty arising
+  from the Monte Carlo approximation? Why or why not?
+
+  - Yes because it generated random values.
 
 - Does the confidence interval above account for uncertainty arising
   from *limited physical tests* (`df_samples`)? Why or why not?
 
-  - It does because by fitting the curve and taking samples from that
-    curve it allows for us to account for possibilities we don’t see in
-    the set.
+  - It does not account for it because the standard error is based off
+    the monte carlo sample size.
 
 - What could you do to tighten up the confidence interval?
 
-  - We could make the confidence interval smaller by adjusting for the
-    weight we multiply the se by. This is the same we we subtract from
-    pof_est and add to pof_est to get us our low and high range of the
-    possibility of failure.
+  - We could tighten up the confidence interval by getting more physical
+    tests.
 
 - Can you *confidently* conclude that `POF < 0.03`? Why or why not?
 
-  - Yes because the variability from the method to calculate the POF is
-    smaller then the variability we see within the given materials and
-    curve we fit to the data.
+  - No because we have limited physical tests so there may be errors
+    ocurring we are not aware of.
 
 ## A different way to compute the POF
 
@@ -557,8 +549,7 @@ df_samples %>%
 
 - Does the confidence interval above account for uncertainty arising
   from *Monte Carlo approximation* of the POF? Why or why not?
-  - Yes it does because plnorm should be able to handle that error that
-    arises from the *Monte Carlo approximation.*
+  - No because we don’t use Monte Carlo.
 - Does the confidence interval above account for uncertainty arising
   from *limited physical tests* (`df_samples`)? Why or why not?
   - It does because it takes that fitted model of the strength and then
