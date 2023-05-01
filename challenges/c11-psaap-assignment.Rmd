@@ -22,7 +22,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|-------------------|-----------------------------|-------------------------|
+|-------------|------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -402,7 +402,7 @@ df_validate
 **Recommendation**:
 
 -   How much do you trust your model? Why?
-    -   The rsquare for both of the values is close to 0.7. So it is not a bad model for the error percentage. But enough of the points fall within the pi for me to be more confident about its accuracy for making sure the variables recommended in this model would work.
+    -   The rsquare for both of the values is close to 0.7. So it is not a bad model for the error percentage. But enough of the points fall within the pi for me to be more confident about its accuracy for making sure the variables recommended in this model would work. This also means that the pi could be much smaller and therefor be more accurate.
 -   What kind of interval---confidence or prediction---would you use for this task, and why?
     -   pi because I want to make sure that the outputs fall within the predicted output since I am testing for a specific heat.
 -   What fraction of validation cases lie within the interval you predict? How does this compare with `pr_level`?

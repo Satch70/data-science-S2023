@@ -250,7 +250,7 @@ df_clt
     ## # A tibble: 1 × 5
     ##    mean    sd      se    lo    hi
     ##   <dbl> <dbl>   <dbl> <dbl> <dbl>
-    ## 1  3.14  1.64 0.00520  3.13  3.15
+    ## 1  3.14  1.64 0.00519  3.13  3.15
 
 **Observations**:
 
@@ -259,9 +259,10 @@ df_clt
 - What confidence level did you choose?
   - 95%
 - Was your sample size $n$ large enough? Why do you say that?
-  - 100,000 was large enough. Observation wise, I would say it was large
-    enough because it consistently made the mean fall within the 95%
-    confidence interval.
+  - 100,000 was large enough. Pi lies within the range of the interval,
+    and the range was not ridiculously large where every point would
+    most likely fall within it because it was just so big. We also know
+    that this range is good because the error was also relatively small.
 
 # References
 
