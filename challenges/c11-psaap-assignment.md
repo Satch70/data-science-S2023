@@ -276,13 +276,15 @@ of fluid, for different experimental settings (e.g. different dimensions
 ## TODO: Visualize the data in df_psaap with T_norm against x;
 ##       design your visual to handle the multiple simulations,
 ##       each identified by different values of idx
-
-df_psaap %>% 
-  ggplot(aes(x = x, y = T_norm, color = factor(idx))) + 
-  geom_point()
 ```
 
-![](c11-psaap-assignment_files/figure-gfm/q2-task-1.png)<!-- -->
+``` r
+df_psaap %>% 
+  ggplot(aes(x = x, y = T_norm, color = factor(idx))) + 
+ geom_line(aes(group = idx))
+```
+
+![](c11-psaap-assignment_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
 
 ## Modeling
 
@@ -712,7 +714,9 @@ df_validate
   - The rsquare for both of the values is close to 0.7. So it is not a
     bad model for the error percentage. But enough of the points fall
     within the pi for me to be more confident about its accuracy for
-    making sure the variables recommended in this model would work.
+    making sure the variables recommended in this model would work. This
+    also means that the pi could be much smaller and therefor be more
+    accurate.
 - What kind of interval—confidence or prediction—would you use for this
   task, and why?
   - pi because I want to make sure that the outputs fall within the
@@ -724,12 +728,14 @@ df_validate
   around?
   - between 1.2 and 2.5.
 - Are there any other recommendations you would provide?
-  - I think that input is also important to manage because that is a
-    variable that humans can control and it is a variable that greatly
-    affected the accuracy of the prediction. So, controlling that would
-    allow the prediction to be more accurate. I also think that this
-    would narrow down the pi so that it would be a more accurate and
-    helpful reading.
+  - I would recommend isolating more inputs that have a measurable
+    affect on the accuracy of the prediction. Finding inputs that not
+    only have a measurable affect, but are also easy to manage. For
+    example the fluid density. It was an input that had a great affect
+    on accuracy, and is also easy to manage by finding a fluid with an
+    ideal density. So, finding more controllable inputs would allow the
+    prediction to be more accurate. I also think that this would narrow
+    down the pi so that it would be a more accurate and helpful reading.
 
 *Bonus*: One way you could take this analysis further is to recommend
 which other variables the design team should tightly control. You could
