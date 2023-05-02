@@ -577,8 +577,8 @@ df_data %>%
 
 - What *overall* trend do you see between `SE` and population? Why might
   this trend exist?
-  - The larger the population estimate derived from a sample size, the
-    smaller the standard error is.
+  - The larger the population sample size, the smaller the standard
+    error is.
 - What does this *overall* trend tell you about the relative ease of
   studying small vs large counties?
   - The larger the county the easier it is to study county accurately.
