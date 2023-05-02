@@ -414,7 +414,8 @@ df_norm_pof
 - Does the confidence interval above account for uncertainty arising
   from the Monte Carlo approximation? Why or why not?
 
-  - Yes because it generated random values.
+  - Yes because it accounts for the number of monte carlo observations
+    n.
 
 - Does the confidence interval above account for uncertainty arising
   from *limited physical tests* (`df_samples`)? Why or why not?
@@ -424,8 +425,8 @@ df_norm_pof
 
 - What could you do to tighten up the confidence interval?
 
-  - We could tighten up the confidence interval by getting more physical
-    tests.
+  - We could tighten up the confidence interval by having more monte
+    carlo observations.
 
 - Can you *confidently* conclude that `POF < 0.03`? Why or why not?
 
