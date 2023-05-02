@@ -199,7 +199,13 @@ df_generated <- tibble(
 
 df_q1 <- df_generated %>% 
   mutate(stat = (x^2 + y^2) <= 1) %>% 
-  summarize(mean = mean(stat)*4, sd = sd(stat)*4)
+  summarize(mean = mean(stat), sd = sd(stat))
+
+mean_value <- df_q1 %>% pull(mean)
+sd_value <- df_q1 %>% pull(sd)
+
+mean_value <- mean_value * 4
+sd_value <- sd_value * 4
 
 df_q1
 ```
@@ -207,7 +213,19 @@ df_q1
     ## # A tibble: 1 × 2
     ##    mean    sd
     ##   <dbl> <dbl>
-    ## 1  3.14  1.64
+    ## 1 0.784 0.411
+
+``` r
+mean_value
+```
+
+    ## [1] 3.13748
+
+``` r
+sd_value
+```
+
+    ## [1] 1.645043
 
 ### **q2** Using your data in `df_q1`, estimate $\pi$.
 
@@ -250,7 +268,7 @@ df_clt
     ## # A tibble: 1 × 5
     ##    mean    sd      se    lo    hi
     ##   <dbl> <dbl>   <dbl> <dbl> <dbl>
-    ## 1  3.14  1.64 0.00519  3.13  3.15
+    ## 1 0.784 0.411 0.00130 0.782 0.787
 
 **Observations**:
 

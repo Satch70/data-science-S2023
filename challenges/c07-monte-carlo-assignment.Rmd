@@ -24,7 +24,7 @@ Unlike exercises, **challenges will be graded**. The following rubrics define ho
 <!-- ------------------------- -->
 
 | Category    | Needs Improvement                                                                                                | Satisfactory                                                                                                               |
-|--------------|----------------------------|-------------------------------|
+|-----------------|--------------------------|-----------------------------|
 | Effort      | Some task **q**'s left unattempted                                                                               | All task **q**'s attempted                                                                                                 |
 | Observed    | Did not document observations, or observations incorrect                                                         | Documented correct observations based on analysis                                                                          |
 | Supported   | Some observations not clearly supported by analysis                                                              | All observations clearly supported by analysis (table, graph, etc.)                                                        |
@@ -115,9 +115,17 @@ df_generated <- tibble(
 
 df_q1 <- df_generated %>% 
   mutate(stat = (x^2 + y^2) <= 1) %>% 
-  summarize(mean = mean(stat)*4, sd = sd(stat)*4)
+  summarize(mean = mean(stat), sd = sd(stat))
+
+mean_value <- df_q1 %>% pull(mean)
+sd_value <- df_q1 %>% pull(sd)
+
+mean_value <- mean_value * 4
+sd_value <- sd_value * 4
 
 df_q1
+mean_value
+sd_value
 ```
 
 ### **q2** Using your data in `df_q1`, estimate $\pi$.
